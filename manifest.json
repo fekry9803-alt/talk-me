@@ -1,0 +1,13 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "talk me",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "talk",
+  "start_url": "/",
+  "theme_color": "#0b0c14",
+  "id": "/talk-me/",
+  "description": "ChatPro - تطبيق محادثات فورية للتواصل مع الآخرين"
+}
