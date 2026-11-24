@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b0c14"><title>ChatPro — تواصل بطريقتك</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700&display=swap');
+:root{--bg:#0b1410;--panel:#202c33;--panel2:#26343b;--line:#303d43;--muted:#9eacb2;--text:#e9edef;--purple:#00a884;--purple2:#087e65;--green:#00a884;--wall-color:#0b141a;--wall:radial-gradient(circle at 20% 20%,#17272b 0,transparent 45%),#0b141a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Alexandria,sans-serif;height:100dvh;overflow:hidden}button,input,textarea{font:inherit}button{cursor:pointer}.app{height:100dvh;display:grid;grid-template-columns:72px 320px 1fr;max-width:1600px;margin:auto;background:var(--panel);border-inline:1px solid var(--line)}
+.rail{background:#202c33;border-left:1px solid var(--line);display:flex;flex-direction:column;align-items:center;padding:17px 8px;gap:13px}.logo{width:46px;height:46px;border-radius:16px;background:linear-gradient(135deg,#00a884,#087e65);display:grid;place-items:center;font-size:23px;box-shadow:0 8px 30px #7849ff55;margin-bottom:14px}.railbtn{width:46px;height:46px;border:0;border-radius:15px;background:transparent;color:#a7abc0;font-size:20px}.railbtn.active,.railbtn:hover{background:#075e54;color:#d9fdd3}.railbottom{margin-top:auto}
+.sidebar{min-width:0;border-left:1px solid var(--line);display:flex;flex-direction:column;background:#111b21}.sidehead{padding:20px 17px 12px}.sidehead h1{font-size:20px;margin:0 0 14px}.search{width:100%;border:1px solid var(--line);background:#202c33;color:white;border-radius:9px;padding:11px 13px;outline:none;font-size:11px}.search:focus{border-color:var(--purple)}
+.tabs{display:flex;padding:0 14px 10px;gap:6px}.tab{border:0;border-radius:20px;padding:7px 11px;background:transparent;color:var(--muted);font-size:10px}.tab.active{background:#075e54;color:#e9edef}
+.chatlist{overflow:auto}.chatitem{display:flex;align-items:center;gap:10px;padding:12px 13px;cursor:pointer;border-top:1px solid #ffffff06;transition:.2s}.chatitem:hover,.chatitem.selected{background:#2a3942}.avatar{width:45px;height:45px;border-radius:16px;display:grid;place-items:center;flex:none;font-weight:700;font-size:15px;background:linear-gradient(145deg,#8b67e9,#423078);color:white;overflow:hidden;background-size:cover;background-position:center}.avatar img{width:100%;height:100%;object-fit:cover}.chatmeta{flex:1;min-width:0}.chatline{display:flex;justify-content:space-between;gap:6px;align-items:center}.chatname{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.time{font-size:8px;color:var(--muted)}.preview{font-size:9px;color:var(--muted);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.unread{background:var(--purple);color:white;border-radius:20px;min-width:18px;height:18px;display:grid;place-items:center;font-size:9px;padding:0 5px}
+.main{min-width:0;display:flex;flex-direction:column;background:var(--wall);position:relative}.topbar{height:70px;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 19px;gap:12px;background:#202c33}.topbar .avatar{width:42px;height:42px}.person{flex:1}.person strong{font-size:12px}.person small{display:block;color:var(--green);font-size:9px;margin-top:4px}.iconbtn{border:0;background:transparent;color:#b8b9ce;font-size:18px;padding:8px;border-radius:11px}.iconbtn:hover{background:#29243c;color:white}
+.stories{display:flex;gap:13px;padding:13px 20px;border-bottom:1px solid #ffffff0d;overflow-x:auto;background:#14162288}.story{border:0;background:transparent;color:#dfe0eb;min-width:62px;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:9px}.storyring{width:53px;height:53px;padding:3px;border-radius:50%;background:linear-gradient(135deg,#b76bff,#6e42ff,#e67bb3);display:grid;place-items:center}.storyring.seen{background:#55596b}.storyinner{width:100%;height:100%;border-radius:50%;background:#25283a;border:2px solid #151621;display:grid;place-items:center;overflow:hidden;font-size:18px}.storyinner img{width:100%;height:100%;object-fit:cover}
+.messages{flex:1;overflow:auto;padding:20px clamp(13px,4vw,48px);display:flex;flex-direction:column;gap:12px;background-image:radial-gradient(#ffffff08 1px,transparent 1px);background-size:24px 24px;background-position:center}.day{text-align:center;color:#9296aa;font-size:9px;background:#1b1e2c;border:1px solid var(--line);padding:6px 13px;border-radius:20px;align-self:center;margin:2px 0 10px}.bubble{max-width:min(74%,520px);padding:11px 14px 8px;border-radius:16px;font-size:11px;line-height:1.9;position:relative;overflow-wrap:anywhere}.bubble.in{align-self:flex-start;background:#202c33;border:1px solid #ffffff08;border-top-right-radius:5px}.bubble.out{align-self:flex-end;background:#005c4b;border-top-left-radius:5px;box-shadow:0 7px 22px #0002}.stamp{display:flex;justify-content:flex-end;color:#c9c2e4;font-size:8px;margin-top:4px}.composer{padding:12px 17px 16px;border-top:1px solid var(--line);display:flex;gap:8px;align-items:center;background:#141622}.composebox{display:flex;align-items:center;gap:7px;flex:1;background:#2a3942;border:1px solid #34434a;border-radius:9px;padding:0 10px}.composebox input{background:transparent;border:0;outline:none;color:white;flex:1;padding:14px 0;font-size:11px;min-width:0}.send{width:43px;height:43px;border:0;border-radius:14px;background:#00a884;color:white;font-size:18px;box-shadow:0 7px 20px #7044ed55}
+.panel{position:absolute;z-index:8;inset:0;background:#090a11eF;display:none;overflow:auto;padding:22px}.panel.open{display:block}.panelcard{max-width:680px;margin:18px auto;background:#202c33;border:1px solid #3b4a50;border-radius:20px;padding:22px;box-shadow:0 25px 80px #0009}.panelhead{display:flex;align-items:center;justify-content:space-between;gap:12px}.panelhead h2{font-size:18px}.close{border:0;border-radius:10px;background:#29243b;color:#fff;padding:8px 12px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{margin:9px 0}.field label{display:block;color:#b9bad0;font-size:10px;margin-bottom:6px}.field input,.field textarea{width:100%;background:#111b21;border:1px solid #3b4a50;border-radius:10px;padding:11px;color:white;outline:none;font-size:11px}.field input:focus,.field textarea:focus{border-color:var(--purple)}.action{border:0;border-radius:12px;padding:10px 15px;background:linear-gradient(120deg,#9160ff,#6034d6);color:white;font-size:11px;font-weight:600}.subtle{color:var(--muted);font-size:10px;line-height:1.9}.stickergrid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin:14px 0}.sticker{border:1px solid #33354a;border-radius:13px;background:#202235;font-size:30px;padding:12px}.wallopts{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}.wallopt{width:75px;height:60px;border:2px solid #ffffff33;border-radius:12px}.wallopt.sel{border-color:#c8aaff}.toast{position:fixed;bottom:18px;left:18px;z-index:30;background:#28213c;border:1px solid #7957be;padding:11px 15px;border-radius:12px;display:none;font-size:10px}
+@media(max-width:760px){.app{grid-template-columns:54px minmax(0,1fr)}.rail{padding:12px 4px;gap:10px}.railbtn{width:43px;height:43px}.main{display:none}.app.chat-open .sidebar{display:none}.app.chat-open .main{display:flex;grid-column:2}.sidebar{border-left:0}.topbar{height:62px;padding:0 8px;gap:7px}.topbar .iconbtn{font-size:15px;padding:6px}.mobileback{display:inline-block!important}.stories{padding:10px;gap:8px}.messages{padding:15px 10px}.bubble{max-width:87%}.composer{padding:9px}.sidehead{padding:15px 10px 10px}.chatitem{padding:10px 8px;gap:8px}.avatar{width:40px;height:40px}.chatname{font-size:10px}.preview{font-size:8px}.tabs{padding-inline:8px}.tab{padding:7px 8px}.formgrid{grid-template-columns:1fr}.panel{padding:10px}.panelcard{padding:16px;margin:8px auto}}
+.mobileback{display:none}
+.hidden{display:none!important}
+.authscreen{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:18px;background:radial-gradient(circle at 20% 15%,#173b36 0,transparent 42%),#0b141a}
+.authscreen:not(.hidden){display:flex}
+.authcard{width:min(100%,420px);padding:28px;border:1px solid #34434a;border-radius:22px;background:#202c33;box-shadow:0 24px 80px #0009;text-align:center}
+.authlogo{margin:0 auto 12px}
+.authcard h1{margin:0 0 5px;font-size:25px}
+.authswitch{display:flex;gap:8px;margin:20px 0 14px;padding:5px;border-radius:12px;background:#111b21}
+.authTab{flex:1;border:0;border-radius:9px;padding:10px;background:transparent;color:#aebbc0;font-size:11px}
+.authTab.active{background:#075e54;color:#fff}
+.authcard .field{text-align:right}
+.authsubmit{width:100%;margin-top:8px;padding:13px}
+.authmessage{min-height:20px;font-size:10px;line-height:1.8;color:#f5c76b}
+.authnote{margin:8px 0 0}
+@media(max-width:480px){.authcard{padding:21px}}
+</style>
+<style>
+/* ChatPro classic messenger skin */
+*{scrollbar-width:thin;scrollbar-color:#435158 transparent}
+button,.chatitem,.avatar,.bubble,.storyring,.panelcard{transition:background-color .18s ease,color .18s ease,transform .18s ease,box-shadow .18s ease,opacity .18s ease}
+.chatitem{border-top:1px solid #ffffff08}
+.chatitem:hover{background:#26343b}
+.chatitem.selected{background:#2a3942;box-shadow:inset -3px 0 #00a884}
+.logo{border-radius:13px;box-shadow:0 5px 18px #00a88433}
+.railbtn.active,.railbtn:hover{background:#2a3942;color:#00a884}
+.avatar{border-radius:50%}
+.topbar .avatar{border-radius:50%}
+.stories{background:#202c33;border-bottom:1px solid #34434a}
+.storyring{padding:2px}
+.storyinner{border-color:#202c33}
+.messages{
+ background-color:#0b141a;
+ background-image:
+ radial-gradient(circle at 18% 24%,#ffffff08 1px,transparent 1.5px),
+ radial-gradient(circle at 72% 66%,#ffffff07 1px,transparent 1.5px),
+ radial-gradient(circle at 42% 82%,#ffffff06 1px,transparent 1.5px);
+ background-size:38px 38px,53px 53px,67px 67px;
+}
+.bubble{animation:messageIn .22s ease-out both;box-shadow:0 1px 1px #0003}
+.bubble.in{border-radius:4px 13px 13px 13px}
+.bubble.out{border-radius:13px 4px 13px 13px}
+.send{border-radius:50%;box-shadow:none}
+.send:hover{transform:scale(1.06);background:#06b995}
+.iconbtn:hover{background:#34434a;color:#00a884}
+.story:hover .storyring{transform:scale(1.07)}
+.panel.open .panelcard{animation:panelIn .2s ease-out}
+@keyframes messageIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@keyframes panelIn{from{opacity:0;transform:translateY(10px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:760px){.stories{background:#202c33}.topbar{background:#202c33}.bubble{max-width:88%}}
+</style>
+
+</head>
+<body>
+<div class="app" id="app">
+ <aside class="rail"><div class="logo">✦</div><button class="railbtn active" title="المحادثات" onclick="showToast('أنت في المحادثات')">▤</button><button class="railbtn" title="إضافة جهة اتصال" onclick="openPanel('contactsPanel')">♙</button><button class="railbtn" title="الحالات المحفوظة" onclick="openPanel('savedPanel')">▣</button><button class="railbtn" title="الملصقات" onclick="openPanel('stickersPanel')">❖</button><button class="railbtn" title="الخلفيات" onclick="openPanel('wallPanel')">▧</button><button class="railbtn" title="الإعدادات" onclick="openPanel('profilePanel')">⚙</button><div class="railbottom avatar" id="myAvatar">A</div></aside>
+ <aside class="sidebar"><div class="sidehead"><h1>المحادثات <span style="color:#9c7bff">✦</span></h1><input class="search" id="search" placeholder="ابحث عن محادثة..." oninput="renderList()"></div><div class="tabs"><button class="tab active">الكل</button><button class="tab">غير مقروءة</button><button class="tab">المفضلة</button></div><div class="chatlist" id="chatlist"></div></aside>
+ <section class="main">
+  <div class="topbar"><button class="iconbtn mobileback" onclick="backToList()">→</button><div class="avatar" id="activeAvatar">♥</div><div class="person"><strong id="activeName">اختار محادثة</strong><small id="activeStatus">معاينة تجريبية</small></div><button class="iconbtn" onclick="openPanel('wallPanel')" title="الخلفية">▧</button><button class="iconbtn" onclick="openPanel('contactsPanel')" title="جهات الاتصال">♙</button><button class="iconbtn" onclick="showToast('المكالمات هتضاف في مرحلة لاحقة')">☎</button></div>
+  <div class="stories" id="stories"></div>
+  <div class="messages" id="messages"><div style="margin:auto;text-align:center;color:#999">اختار محادثة من القائمة</div></div>
+  <form class="composer" onsubmit="sendMessage(event)"><button type="button" class="iconbtn" onclick="openPanel('stickersPanel')" title="الاستيكرز">❖</button><div class="composebox"><button type="button" class="iconbtn" onclick="openPanel('mediaPanel')" title="إرفاق صورة">＋</button><input id="msg" autocomplete="off" placeholder="اكتب رسالتك هنا..." disabled><button type="button" class="iconbtn" onclick="openPanel('mediaPanel')" title="صورة">▧</button></div><button class="send" type="submit">➤</button></form>
+ </section>
+</div>
+<!-- Contact panel -->
+<div class="panel" id="contactsPanel"><div class="panelcard"><div class="panelhead"><h2>ابدأ محادثة جديدة ♙</h2><button class="close" onclick="closePanels()">إغلاق ✕</button></div><p class="subtle">ابحث باسم المستخدم الذي اختاره الشخص داخل ChatPro. لن نبحث عن أرقام هواتف أو نكشف بيانات خاصة.</p><div class="field"><label>اسم المستخدم</label><input id="contactUsername" placeholder="مثال: ahmed_123" dir="ltr"></div><button class="action" onclick="addContact()">بحث وبدء المحادثة</button><div id="contactRows" class="subtle" style="margin-top:14px"></div></div></div>
+<!-- Saved statuses -->
+<div class="panel" id="savedPanel"><div class="panelcard"><div class="panelhead"><h2>حالاتي المحفوظة ▣</h2><button class="close" onclick="closePanels()">إغلاق ✕</button></div><p class="subtle">احفظ صور أو نصوص كحالات شخصية في هذه المعاينة.</p><div class="field"><label>اكتب حالة جديدة</label><textarea id="statusText" rows="3" placeholder="اكتب حاجة حلوة..."></textarea></div><div class="field"><label>أو اختار صورة للحالة</label><input type="file" id="statusImage" accept="image/*"></div><button class="action" onclick="saveStatus()">حفظ الحالة</button><div id="savedStatuses" style="margin-top:16px"></div></div></div>
+<!-- Stickers -->
+<div class="panel" id="stickersPanel"><div class="panelcard"><div class="panelhead"><h2>استيكرز ChatPro ❖</h2><button class="close" onclick="closePanels()">إغلاق ✕</button></div><p class="subtle">اختار ملصق لإرساله في المحادثة الحالية.</p><div class="stickergrid" id="stickergrid"></div><p class="subtle">إضافة حزم استيكرز خاصة ورفع صور PNG شفافة هتكون ضمن التطوير القادم.</p></div></div>
+<!-- Wallpaper -->
+<div class="panel" id="wallPanel"><div class="panelcard"><div class="panelhead"><h2>خلفية محادثتك ▧</h2><button class="close" onclick="closePanels()">إغلاق ✕</button></div><p class="subtle">اختار خلفية جاهزة أو ارفع صورة من جهازك.</p><div class="wallopts"><button class="wallopt sel" style="background:radial-gradient(#37245f,#10121b)" onclick="setWall(0,this)"></button><button class="wallopt" style="background:linear-gradient(135deg,#142f3d,#10121b)" onclick="setWall(1,this)"></button><button class="wallopt" style="background:linear-gradient(135deg,#4a233b,#120e19)" onclick="setWall(2,this)"></button><button class="wallopt" style="background:linear-gradient(135deg,#34312a,#10121b)" onclick="setWall(3,this)"></button></div><div class="field"><label>رفع صورة كخلفية</label><input id="wallFile" type="file" accept="image/*"></div><button class="action" onclick="uploadWall()">استخدم الصورة</button></div></div>
+<!-- Profile -->
+<div class="panel" id="profilePanel"><div class="panelcard"><div class="panelhead"><h2>ملفي الشخصي ⚙</h2><button class="close" onclick="closePanels()">إغلاق ✕</button></div><div class="field"><label>اسم العرض</label><input id="profileName" placeholder="اسمك الظاهر"></div><div class="field"><label>اسم المستخدم (فريد)</label><input id="profileUsername" placeholder="مثال: ahmed_123" dir="ltr"></div><div class="field"><label>نبذة عني</label><input id="profileAbout" placeholder="متاح للدردشة"></div><div class="field"><label>صورة الملف الشخصي</label><input type="file" id="profileFile" accept="image/*"></div><button class="action" onclick="saveProfile()">حفظ الملف الشخصي</button> <button class="close" onclick="signOutChatPro()">تسجيل الخروج</button></div></div>
+<!-- Media -->
+<div class="panel" id="mediaPanel"><div class="panelcard"><div class="panelhead"><h2>إرفاق صورة</h2><button class="close" onclick="closePanels()">إغلاق ✕</button></div><p class="subtle">رفع الصور وإرسالها يحتاج إعداد مساحة تخزين (Supabase Storage)، وسيتم تفعيله بعد تجهيزها.</p><div class="field"><input type="file" id="mediaFile" accept="image/*"></div><button class="action" onclick="sendImage()">إرفاق في المحادثة</button></div></div>
+<div class="authscreen" id="authScreen">
+  <div class="authcard">
+    <div class="logo authlogo">✦</div>
+    <h1>ChatPro</h1>
+    <p class="subtle">حسابك الحقيقي ومحادثاتك الخاصة</p>
+    <div class="authswitch"><button id="loginTab" class="authTab active" onclick="setAuthMode('login')">تسجيل الدخول</button><button id="signupTab" class="authTab" onclick="setAuthMode('signup')">حساب جديد</button></div>
+    <div id="signupFields" style="display:none">
+      <div class="field"><label>اسم العرض</label><input id="authName" placeholder="اسمك"></div>
+      <div class="field"><label>اسم المستخدم</label><input id="authUsername" placeholder="username" dir="ltr" autocomplete="username"></div>
+    </div>
+    <div class="field"><label>البريد الإلكتروني</label><input id="authEmail" type="email" placeholder="name@example.com" dir="ltr" autocomplete="email"></div>
+    <div class="field"><label>كلمة المرور</label><input id="authPassword" type="password" placeholder="6 أحرف على الأقل" dir="ltr" autocomplete="current-password"></div>
+    <button class="action authsubmit" id="authSubmit" onclick="submitAuth()">تسجيل الدخول</button>
+    <p class="authmessage" id="authMessage" role="status"></p>
+    <p class="subtle authnote">استخدم بريدك الحقيقي. قد يطلب Supabase تأكيد البريد قبل أول دخول.</p>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+let chats=[];
+let active=null, statuses=[{text:'أهلاً بيكم في ChatPro ✨',img:null}], profileImage=null;
+const $=id=>document.getElementById(id);
+function showToast(t){let e=$('toast');e.textContent=t;e.style.display='block';setTimeout(()=>e.style.display='none',2600)}
+function renderList(){let q=$('search').value.trim().toLowerCase(),el=$('chatlist');el.innerHTML='';chats.filter(c=>c.name.toLowerCase().includes(q)||c.preview.toLowerCase().includes(q)).forEach(c=>{let row=document.createElement('div');row.className='chatitem'+(active===c.id?' selected':'');row.onclick=()=>openChat(c.id);let av=document.createElement('div');av.className='avatar '+(c.color||'');av.textContent=c.initial;let meta=document.createElement('div');meta.className='chatmeta';let line=document.createElement('div');line.className='chatline';let name=document.createElement('span');name.className='chatname';name.textContent=c.name;let time=document.createElement('span');time.className='time';time.textContent=c.time;line.append(name,time);let prev=document.createElement('div');prev.className='preview';prev.textContent=c.preview;meta.append(line,prev);row.append(av,meta);if(c.unread){let badge=document.createElement('span');badge.className='unread';badge.textContent=c.unread;row.append(badge)}el.append(row)})}
+function openChat(id){active=id;let c=chats.find(x=>x.id===id);c.unread=0;$('activeAvatar').textContent=c.initial;$('activeAvatar').className='avatar '+(c.color||'');$('activeName').textContent=c.name;$('activeStatus').textContent=c.status;$('msg').disabled=false;$('msg').focus();let box=$('messages');box.innerHTML='<div class="day">اليوم</div>';c.msgs.forEach(m=>addBubble(m[0],m[1],m[2]));renderList();if(innerWidth<=760)$('app').classList.add('chat-open')}
+function addBubble(type,text,time){let box=$('messages'),b=document.createElement('div');b.className='bubble '+type;b.textContent=text;let s=document.createElement('div');s.className='stamp';s.textContent=time+(type==='out'?'　✓✓':'');b.append(s);box.append(b);box.scrollTop=box.scrollHeight}
+function sendMessage(e){e.preventDefault();let input=$('msg'),v=input.value.trim();if(!v||!active)return;let c=chats.find(x=>x.id===active),now=new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});c.msgs.push(['out',v,now]);c.preview=v;c.time=now;addBubble('out',v,now);input.value='';renderList()}
+function backToList(){$('app').classList.remove('chat-open')}
+function openPanel(id){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('open'));$(id).classList.add('open');if(id==='contactsPanel')renderContacts();if(id==='savedPanel')renderStatuses();if(id==='stickersPanel')renderStickers()}
+function closePanels(){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('open'))}
+function addContact(){let name=$('contactName').value.trim(),phone=$('contactPhone').value.trim();if(!name||!phone)return showToast('اكتب الاسم ورقم الهاتف');if(!/^\+?[0-9\s()-]{8,18}$/.test(phone))return showToast('راجع صيغة رقم الهاتف');let id=Date.now();chats.unshift({id,name,initial:name[0],color:'blue',status:'جهة اتصال مضافة محلياً',time:'الآن',unread:0,preview:'جهة اتصال جديدة — ابدأ رسالة',msgs:[]});$('contactName').value='';$('contactPhone').value='';renderList();renderContacts();showToast('اتضافت للقائمة التجريبية')}
+function renderContacts(){$('contactRows').innerHTML=chats.map(c=>'• '+safe(c.name)).join('<br>')}
+function safe(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function saveStatus(){let text=$('statusText').value.trim(),file=$('statusImage').files[0];if(file){let r=new FileReader();r.onload=()=>{statuses.unshift({text,img:r.result});renderStories();renderStatuses();$('statusText').value='';showToast('اتحفظت الحالة على الجهاز')};r.readAsDataURL(file)}else if(text){statuses.unshift({text,img:null});renderStories();renderStatuses();$('statusText').value='';showToast('اتحفظت الحالة على الجهاز')}else showToast('اكتب حالة أو اختار صورة')}
+function renderStories(){let el=$('stories');el.innerHTML='';let mine=document.createElement('button');mine.className='story';mine.onclick=()=>openPanel('savedPanel');mine.innerHTML='<span class="storyring"><span class="storyinner">＋</span></span><span>حالتي</span>';el.append(mine);statuses.slice(0,6).forEach((s,i)=>{let b=document.createElement('button');b.className='story';b.onclick=()=>showToast(s.text||'حالة بصورة');let inner=s.img?'<img src="'+s.img+'">':'✦';b.innerHTML='<span class="storyring"><span class="storyinner">'+inner+'</span></span><span>حالة '+(i+1)+'</span>';el.append(b)})}
+function renderStatuses(){$('savedStatuses').innerHTML=statuses.map(s=>'<div style="padding:12px;margin:8px 0;border:1px solid #35354a;border-radius:12px;font-size:11px">'+(s.img?'<img src="'+s.img+'" style="max-width:100%;max-height:140px;border-radius:9px;display:block;margin-bottom:8px">':'')+safe(s.text||'حالة بصورة')+'</div>').join('')}
+const stickers=['❤️','😂','🥰','😍','🔥','👍','😭','✨','💜','🌹','🤝','😎','🎉','🫶','💯'];
+function renderStickers(){let grid=$('stickergrid');grid.innerHTML='';stickers.forEach(s=>{let b=document.createElement('button');b.className='sticker';b.textContent=s;b.addEventListener('click',()=>sendSticker(s));grid.appendChild(b)})}
+function sendSticker(s){if(!active)return showToast('افتح محادثة الأول');let c=chats.find(x=>x.id===active),now=new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});c.msgs.push(['out',s,now]);c.preview=s;c.time=now;addBubble('out',s,now);renderList();closePanels()}
+function setWall(n,el){let walls=['radial-gradient(ellipse at 50% 30%,#21183b 0,transparent 60%),#10121b','linear-gradient(135deg,#142f3d,#10121b)','linear-gradient(135deg,#4a233b,#120e19)','linear-gradient(135deg,#34312a,#10121b)'];document.querySelector('.main').style.background=walls[n];document.querySelectorAll('.wallopt').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');showToast('تم تغيير الخلفية للمعاينة');}
+function uploadWall(){let f=$('wallFile').files[0];if(!f)return showToast('اختار صورة الأول');let r=new FileReader();r.onload=()=>{document.querySelector('.main').style.background='linear-gradient(#10121b66,#10121b66),url('+r.result+') center/cover';closePanels();showToast('تم تطبيق الخلفية على الجهاز')};r.readAsDataURL(f)}
+function saveProfile(){let n=$('profileName').value.trim()||'User';$('myAvatar').textContent=n[0];if($('profileFile').files[0]){let r=new FileReader();r.onload=()=>{$('myAvatar').innerHTML='<img src="'+r.result+'">';profileImage=r.result;showToast('تم تحديث الصورة محلياً')};r.readAsDataURL($('profileFile').files[0])}else showToast('تم تحديث الملف التجريبي')}
+function sendImage(){let f=$('mediaFile').files[0];if(!f||!active)return showToast('اختار صورة وافتح محادثة');let r=new FileReader();r.onload=()=>{let c=chats.find(x=>x.id===active),now=new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});c.msgs.push(['out','📷 صورة مرفقة',now]);addBubble('out','📷 صورة مرفقة',now);renderList();closePanels();showToast('مرفق تجريبي — لم يتم إرساله لمستخدم آخر')};r.readAsDataURL(f)}
+renderList();renderStories();
+
+// ===== ChatPro: real Supabase connection =====
+// The publishable key is intended for browser use. Database access is protected by RLS.
+const CHATPRO_SUPABASE_URL = "https://yrfshalgkdbnycffcqwe.supabase.co";
+const CHATPRO_SUPABASE_KEY = "sb_publishable_R7lPrrwl4vvnITNXWIXrKQ_iWk3xBRg";
+const chatproDb = window.supabase.createClient(CHATPRO_SUPABASE_URL, CHATPRO_SUPABASE_KEY);
+let chatproUser = null;
+let chatproProfile = null;
+let chatproRealtime = null;
+let chatproAuthMode = "login";
+let chatproLoadingChat = false;
+
+function authMessage(message, isError=false){
+  const el = $("authMessage");
+  if(el){ el.textContent = message || ""; el.style.color = isError ? "#ff9b9b" : "#f5c76b"; }
+}
+function setAuthMode(mode){
+  chatproAuthMode = mode;
+  $("signupFields").style.display = mode === "signup" ? "block" : "none";
+  $("loginTab").classList.toggle("active", mode === "login");
+  $("signupTab").classList.toggle("active", mode === "signup");
+  $("authSubmit").textContent = mode === "login" ? "تسجيل الدخول" : "إنشاء الحساب";
+  $("authPassword").autocomplete = mode === "login" ? "current-password" : "new-password";
+  authMessage("");
+}
+async function submitAuth(){
+  const email = $("authEmail").value.trim();
+  const password = $("authPassword").value;
+  if(!email || !password) return authMessage("اكتب البريد الإلكتروني وكلمة المرور.", true);
+  if(password.length < 6) return authMessage("كلمة المرور لازم تكون 6 أحرف على الأقل.", true);
+  $("authSubmit").disabled = true;
+  $("authSubmit").textContent = "جارٍ التنفيذ...";
+  try{
+    if(chatproAuthMode === "signup"){
+      const display_name = $("authName").value.trim();
+      const username = $("authUsername").value.trim().toLowerCase().replace(/^@/,"");
+      if(!display_name || !/^[a-z0-9_]{3,24}$/.test(username)){
+        throw new Error("اكتب اسم العرض واسم مستخدم من 3 إلى 24 حرفاً إنجليزياً أو رقماً أو _");
+      }
+      const {data,error} = await chatproDb.auth.signUp({
+        email,password,
+        options:{data:{display_name,username}}
+      });
+      if(error) throw error;
+      if(data.session){
+        await ensureChatProProfile(data.user, display_name, username);
+        await activateChatPro(data.session);
+      }else{
+        authMessage("تم إنشاء الحساب. افتح بريدك الإلكتروني واضغط رابط التأكيد، ثم ارجع وسجّل الدخول.");
+      }
+    }else{
+      const {data,error} = await chatproDb.auth.signInWithPassword({email,password});
+      if(error) throw error;
+      await activateChatPro(data.session);
+    }
+  }catch(err){ authMessage(err.message || "حصل خطأ أثناء تسجيل الدخول.", true); }
+  finally{
+    $("authSubmit").disabled = false;
+    $("authSubmit").textContent = chatproAuthMode === "login" ? "تسجيل الدخول" : "إنشاء الحساب";
+  }
+}
+async function ensureChatProProfile(user, displayName, username){
+  if(!user) throw new Error("لم يتم العثور على حساب المستخدم.");
+  const meta = user.user_metadata || {};
+  const {data: existing, error: readError} = await chatproDb
+    .from("profiles").select("id,display_name,username,avatar_url")
+    .eq("id", user.id).maybeSingle();
+  if(readError) throw readError;
+
+  if(existing){
+    if(displayName || username){
+      const updates = {};
+      if(displayName) updates.display_name = displayName;
+      if(username) updates.username = username;
+      const {error} = await chatproDb.from("profiles").update(updates).eq("id", user.id);
+      if(error) throw error;
+    }
+    return;
+  }
+
+  const row = {
+    id:user.id,
+    display_name:displayName || meta.display_name || (user.email||"مستخدم").split("@")[0],
+    username:username || meta.username || ("user_" + user.id.replace(/-/g,"").slice(0,10))
+  };
+  const {error} = await chatproDb.from("profiles").insert(row);
+  if(error) throw error;
+}
+async function activateChatPro(session){
+  if(!session || !session.user) return;
+  chatproUser = session.user;
+  await ensureChatProProfile(chatproUser);
+  const {data,error} = await chatproDb.from("profiles")
+    .select("id,display_name,username,avatar_url")
+    .eq("id",chatproUser.id).maybeSingle();
+  if(error) throw error;
+  chatproProfile = data;
+  $("authScreen").classList.add("hidden");
+  $("myAvatar").textContent = (chatproProfile.display_name || "C").slice(0,1);
+  $("profileName").value = chatproProfile.display_name || "";
+  $("profileUsername").value = chatproProfile.username || "";
+  if(chatproProfile.avatar_url){
+    $("myAvatar").innerHTML = '<img src="'+safe(chatproProfile.avatar_url)+'" alt="الصورة الشخصية">';
+  }
+  await loadChatProConversations();
+}
+async function signOutChatPro(){
+  if(chatproRealtime){ await chatproDb.removeChannel(chatproRealtime); chatproRealtime=null; }
+  const {error} = await chatproDb.auth.signOut();
+  if(error) return showToast(error.message);
+  chatproUser=null;chatproProfile=null;chats=[];active=null;
+  renderList();$("authScreen").classList.remove("hidden");closePanels();
+  authMessage("تم تسجيل الخروج.");
+}
+async function loadChatProConversations(){
+  if(!chatproUser) return;
+  const {data:members,error:mErr} = await chatproDb.from("conversation_members")
+    .select("conversation_id").eq("user_id",chatproUser.id);
+  if(mErr) throw mErr;
+  const ids=(members||[]).map(x=>x.conversation_id);
+  if(!ids.length){chats=[];active=null;renderList();$("messages").innerHTML='<div style="margin:auto;text-align:center;color:#9eacb2">ابدأ محادثة جديدة من زر جهات الاتصال ✦</div>';return;}
+  const {data:conversations,error:cErr}=await chatproDb.from("conversations")
+    .select("id,title,is_group,created_at").in("id",ids).order("created_at",{ascending:false});
+  if(cErr) throw cErr;
+  const {data:latest,error:m2Err}=await chatproDb.from("messages")
+    .select("conversation_id,body,created_at").in("conversation_id",ids)
+    .order("created_at",{ascending:false}).limit(100);
+  if(m2Err) throw m2Err;
+  const latestById={};
+  (latest||[]).forEach(m=>{if(!latestById[m.conversation_id])latestById[m.conversation_id]=m;});
+  chats=(conversations||[]).map(c=>{
+    const last=latestById[c.id];
+    return {id:c.id,name:c.title||"محادثة ChatPro",initial:(c.title||"C").slice(0,1),color:"green",
+      status:"محادثة ChatPro",time:last?new Date(last.created_at).toLocaleTimeString("ar-EG",{hour:"2-digit",minute:"2-digit"}):"",
+      unread:0,preview:last?(last.body||"📷 صورة"):"ابدأ المحادثة",msgs:[]};
+  });
+  renderList();
+  if(active && chats.some(c=>c.id===active)) await openChat(active);
+  else {active=null;$("messages").innerHTML='<div style="margin:auto;text-align:center;color:#9eacb2">اختار محادثة أو ابدأ واحدة جديدة</div>';$("msg").disabled=true;}
+}
+window.renderList=function(){
+  const q=$("search").value.trim().toLowerCase(),el=$("chatlist");el.innerHTML="";
+  chats.filter(c=>c.name.toLowerCase().includes(q)||c.preview.toLowerCase().includes(q)).forEach(c=>{
+    const row=document.createElement("div");row.className="chatitem"+(active===c.id?" selected":"");row.onclick=()=>openChat(c.id);
+    const av=document.createElement("div");av.className="avatar";av.textContent=c.initial;
+    const meta=document.createElement("div");meta.className="chatmeta";
+    const line=document.createElement("div");line.className="chatline";
+    const name=document.createElement("span");name.className="chatname";name.textContent=c.name;
+    const time=document.createElement("span");time.className="time";time.textContent=c.time||"";
+    line.append(name,time);const prev=document.createElement("div");prev.className="preview";prev.textContent=c.preview;
+    meta.append(line,prev);row.append(av,meta);el.append(row);
+  });
+};
+window.openChat=async function(id){
+  if(!chatproUser)return;
+  const c=chats.find(x=>x.id===id);if(!c)return;
+  active=id;chatproLoadingChat=true;
+  $("activeAvatar").textContent=c.initial;$("activeName").textContent=c.name;
+  $("activeStatus").textContent="محادثة خاصة";$("msg").disabled=false;
+  $("messages").innerHTML='<div style="margin:auto;color:#9eacb2">جارٍ تحميل الرسائل...</div>';
+  renderList();if(innerWidth<=760)$("app").classList.add("chat-open");
+  if(chatproRealtime){await chatproDb.removeChannel(chatproRealtime);chatproRealtime=null;}
+  const {data,error}=await chatproDb.from("messages").select("id,sender_id,body,image_url,created_at")
+    .eq("conversation_id",id).order("created_at",{ascending:true}).limit(300);
+  if(error){showToast("تعذر تحميل الرسائل: "+error.message);chatproLoadingChat=false;return;}
+  $("messages").innerHTML='<div class="day">المحادثة</div>';
+  c.msgs=(data||[]).map(m=>m);
+  c.msgs.forEach(m=>{
+    const kind=m.sender_id===chatproUser.id?"out":"in";
+    addBubble(kind,m.body||(m.image_url?"📷 صورة":""),new Date(m.created_at).toLocaleTimeString("ar-EG",{hour:"2-digit",minute:"2-digit"}));
+  });
+  chatproLoadingChat=false;
+  chatproRealtime=chatproDb.channel("chatpro-"+id)
+    .on("postgres_changes",{event:"INSERT",schema:"public",table:"messages",filter:"conversation_id=eq."+id},payload=>{
+      const m=payload.new;
+      if(m.sender_id===chatproUser.id && c.msgs.some(x=>x.id===m.id))return;
+      c.msgs.push(m);
+      addBubble(m.sender_id===chatproUser.id?"out":"in",m.body||(m.image_url?"📷 صورة":""),new Date(m.created_at).toLocaleTimeString("ar-EG",{hour:"2-digit",minute:"2-digit"}));
+      c.preview=m.body||"📷 صورة";c.time=new Date(m.created_at).toLocaleTimeString("ar-EG",{hour:"2-digit",minute:"2-digit"});renderList();
+    }).subscribe();
+};
+window.sendMessage=async function(e){
+  e.preventDefault();const input=$("msg"),body=input.value.trim();
+  if(!body||!active||!chatproUser)return;
+  input.disabled=true;
+  const {error}=await chatproDb.from("messages").insert({conversation_id:active,sender_id:chatproUser.id,body});
+  input.disabled=false;
+  if(error){showToast("لم تُرسل الرسالة: "+error.message);return;}
+  input.value="";
+};
+window.addContact=async function(){
+  const username=$("contactUsername").value.trim().toLowerCase().replace(/^@/,"");
+  if(!/^[a-z0-9_]{3,24}$/.test(username))return showToast("اكتب اسم مستخدم صحيحاً.");
+  if(!chatproUser)return;
+  $("contactRows").textContent="جارٍ البحث...";
+  const {data:user,error}=await chatproDb.from("profiles")
+    .select("id,display_name,username").eq("username",username).maybeSingle();
+  if(error){$("contactRows").textContent=error.message;return;}
+  if(!user){$("contactRows").textContent="لم نعثر على مستخدم بهذا الاسم.";return;}
+  if(user.id===chatproUser.id){$("contactRows").textContent="لا يمكنك بدء محادثة مع نفسك.";return;}
+  const {data:conversationId,error:rpcError}=await chatproDb.rpc("create_direct_conversation",{other_user:user.id});
+  if(rpcError){$("contactRows").textContent="تعذر إنشاء المحادثة: "+rpcError.message;return;}
+  $("contactUsername").value="";closePanels();
+  await loadChatProConversations();await openChat(conversationId);
+};
+window.saveProfile=async function(){
+  if(!chatproUser)return;
+  const display_name=$("profileName").value.trim();
+  const username=$("profileUsername").value.trim().toLowerCase().replace(/^@/,"");
+  if(!display_name||!/^[a-z0-9_]{3,24}$/.test(username))return showToast("اسم المستخدم يجب أن يكون 3-24 حرفاً إنجليزياً أو رقماً أو _");
+  const {data,error}=await chatproDb.from("profiles").update({display_name,username}).eq("id",chatproUser.id).select("id,display_name,username,avatar_url").maybeSingle();
+  if(error){showToast("تعذر حفظ الملف: "+error.message);return;}
+  chatproProfile=data;
+  $("myAvatar").textContent=display_name.slice(0,1);
+  if($("profileFile").files[0]) showToast("تم حفظ الاسم واسم المستخدم. رفع الصورة يحتاج إعداد Storage أولاً.");
+  else showToast("تم حفظ ملفك الشخصي");
+};
+window.addContact=window.addContact;
+window.sendSticker=function(s){
+  if(!active||!chatproUser)return showToast("افتح محادثة أولاً");
+  chatproDb.from("messages").insert({conversation_id:active,sender_id:chatproUser.id,body:s})
+    .then(({error})=>{if(error)showToast("تعذر إرسال الملصق: "+error.message);else closePanels();});
+};
+window.saveStatus=function(){showToast("الحالات السحابية هتتضاف في المرحلة التالية بعد تجهيز جدول الحالات.");};
+window.sendImage=function(){showToast("رفع الصور وإرسالها هنفعّله في المرحلة التالية بعد إعداد Storage.");};
+window.saveProfile=window.saveProfile;
+window.signOutChatPro=signOutChatPro;
+
+(async function initChatPro(){
+  try{
+    const {data,error}=await chatproDb.auth.getSession();if(error)throw error;
+    if(data.session) await activateChatPro(data.session);
+    else $("authScreen").classList.remove("hidden");
+    chatproDb.auth.onAuthStateChange((event,session)=>{
+      if(event==="SIGNED_IN" && session && !chatproUser){
+        setTimeout(()=>activateChatPro(session).catch(e=>showToast(e.message)),0);
+      }
+      if(event==="SIGNED_OUT"){
+        chatproUser=null;$("authScreen").classList.remove("hidden");
+      }
+    });
+  }catch(err){$("authScreen").classList.remove("hidden");authMessage("تعذر الاتصال بـ Supabase: "+err.message,true);}
+})();
+
+</script></body></html>
