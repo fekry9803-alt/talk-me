@@ -134,7 +134,80 @@ function renderStickers(){let grid=$('stickergrid');grid.innerHTML='';stickers.f
 function sendSticker(s){if(!active)return showToast('افتح محادثة الأول');let c=chats.find(x=>x.id===active),now=new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});c.msgs.push(['out',s,now]);c.preview=s;c.time=now;addBubble('out',s,now);renderList();closePanels()}
 function setWall(n,el){let walls=['radial-gradient(ellipse at 50% 30%,#21183b 0,transparent 60%),#10121b','linear-gradient(135deg,#142f3d,#10121b)','linear-gradient(135deg,#4a233b,#120e19)','linear-gradient(135deg,#34312a,#10121b)'];document.querySelector('.main').style.background=walls[n];document.querySelectorAll('.wallopt').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');showToast('تم تغيير الخلفية للمعاينة');}
 function uploadWall(){let f=$('wallFile').files[0];if(!f)return showToast('اختار صورة الأول');let r=new FileReader();r.onload=()=>{document.querySelector('.main').style.background='linear-gradient(#10121b66,#10121b66),url('+r.result+') center/cover';closePanels();showToast('تم تطبيق الخلفية على الجهاز')};r.readAsDataURL(f)}
-function saveProfile(){let n=$('profileName').value.trim()||'User';$('myAvatar').textContent=n[0];if($('profileFile').files[0]){let r=new FileReader();r.onload=()=>{$('myAvatar').innerHTML='<img src="'+r.result+'">';profileImage=r.result;showToast('تم تحديث الصورة محلياً')};r.readAsDataURL($('profileFile').files[0])}else showToast('تم تحديث الملف التجريبي')}
+
+window.saveProfile = async function () {
+  if (!chatproUser) return;
+
+  const display_name = $("profileName").value.trim();
+  const username = $("profileUsername").value.trim()
+    .toLowerCase().replace(/^@/, "");
+
+  const file = $("profileFile").files[0];
+
+  if (!display_name || !/^[a-z0-9_]{3,24}$/.test(username)) {
+    return showToast("راجع الاسم واسم المستخدم");
+  }
+
+  try {
+    let avatar_url = chatproProfile?.avatar_url || null;
+
+    if (file) {
+      if (!file.type.startsWith("image/")) {
+        throw new Error("اختار ملف صورة صالح");
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        throw new Error("حجم الصورة يجب ألا يتجاوز 5 ميجابايت");
+      }
+
+      const ext = file.type.split("/")[1] || "png";
+      const path = `${chatproUser.id}/avatar-${Date.now()}.${ext}`;
+
+      const { error: uploadError } = await chatproDb
+        .storage.from("chat-media")
+        .upload(path, file, {
+          upsert: false,
+          contentType: file.type
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicData } = chatproDb
+        .storage.from("chat-media")
+        .getPublicUrl(path);
+
+      avatar_url = publicData.publicUrl;
+    }
+
+    const { data, error } = await chatproDb
+      .from("profiles")
+      .update({
+        display_name,
+        username,
+        avatar_url
+      })
+      .eq("id", chatproUser.id)
+      .select("id,display_name,username,avatar_url")
+      .single();
+
+    if (error) throw error;
+
+    chatproProfile = data;
+
+    if (avatar_url) {
+      $("myAvatar").innerHTML =
+        `<img src="${avatar_url}" alt="الصورة الشخصية">`;
+    } else {
+      $("myAvatar").textContent = display_name.slice(0, 1);
+    }
+
+    $("profileFile").value = "";
+    showToast("تم حفظ الملف الشخصي والصورة بنجاح");
+  } catch (error) {
+    showToast("فشل الحفظ: " + error.message);
+  }
+};
+
 function sendImage(){let f=$('mediaFile').files[0];if(!f||!active)return showToast('اختار صورة وافتح محادثة');let r=new FileReader();r.onload=()=>{let c=chats.find(x=>x.id===active),now=new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});c.msgs.push(['out','📷 صورة مرفقة',now]);addBubble('out','📷 صورة مرفقة',now);renderList();closePanels();showToast('مرفق تجريبي — لم يتم إرساله لمستخدم آخر')};r.readAsDataURL(f)}
 renderList();renderStories();
 
