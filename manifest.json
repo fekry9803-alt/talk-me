@@ -1,13 +1,29 @@
+
 {
-  "background_color": "#ffffff",
-  "dir": "ltr",
+  "id": "./",
+  "name": "ChatPro",
+  "short_name": "ChatPro",
+  "description": "ChatPro - تطبيق محادثات فورية للتواصل مع الآخرين",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "name": "talk me",
-  "orientation": "any",
-  "scope": "/",
-  "short_name": "talk",
-  "start_url": "/",
-  "theme_color": "#0b0c14",
-  "id": "/talk-me/",
-  "description": "ChatPro - تطبيق محادثات فورية للتواصل مع الآخرين"
+  "orientation": "portrait",
+  "dir": "rtl",
+  "lang": "ar",
+  "background_color": "#111827",
+  "theme_color": "#0B0C14",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
 }
